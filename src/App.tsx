@@ -20,6 +20,7 @@ function App() {
   const [paymentToken, setPaymentToken] = useState("");
   const [cardMask, setCardMask] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,6 +31,7 @@ function App() {
     setError("");
     setPaymentToken("");
     setCardMask("");
+    setLoading(true);
 
     try {
       const result: any = await EfiPay.CreditCard
@@ -42,6 +44,8 @@ function App() {
       setCardMask(result?.card_mask || "");
     } catch (error: any) {
       setError(error?.error_description || "Erro desconhecido.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,12 +73,12 @@ function App() {
 
   const buttonStyle: React.CSSProperties = {
     padding: "10px",
-    backgroundColor: "#007bff",
+    backgroundColor: loading ? "#aaa" : "#007bff",
     color: "#fff",
     border: "none",
     borderRadius: "6px",
     fontSize: "16px",
-    cursor: "pointer"
+    cursor: loading ? "not-allowed" : "pointer"
   };
 
   return (
@@ -105,8 +109,8 @@ function App() {
         <input type="text" name="holderName" value={cardData.holderName} onChange={handleInputChange} placeholder="Nome do titular" style={inputStyle} />
         <input type="text" name="holderDocument" value={cardData.holderDocument} onChange={handleInputChange} placeholder="CPF do titular" style={inputStyle} />
 
-        <button onClick={handleSubmit} style={buttonStyle}>
-          Gerar Token de Pagamento
+        <button onClick={handleSubmit} style={buttonStyle} disabled={loading}>
+          {loading ? "Gerando..." : "Gerar Token de Pagamento"}
         </button>
 
         {paymentToken && (

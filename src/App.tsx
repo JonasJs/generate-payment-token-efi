@@ -2,31 +2,58 @@ import { useState } from 'react'
 import './App.css'
 import EfiPay from "payment-token-efi";
 
+// Função para gerar dados de pessoa (nome e CPF)
+async function gerarPessoa() {
+  const response = await fetch('https://www.4devs.com.br/ferramentas_online.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
+      acao: 'gerar_pessoa',
+      sexo: 'I',
+      pontuacao: 'N'
+    })
+  });
+  return await response.json();
+}
+
+// Função para gerar dados de cartão de crédito
+async function gerarCartaoCredito(bandeira = 'visa') {
+  const response = await fetch('https://www.4devs.com.br/ferramentas_online.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
+      acao: 'gerar_cc',
+      bandeira: bandeira
+    })
+  });
+  return await response.json();
+}
+
 function App() {
+  // STATES agrupados
   const [accountId, setAccountId] = useState("Identificador_de_conta_aqui");
   const [environment, setEnvironment] = useState<"sandbox" | "production">("sandbox");
-
-  const [cardData, setCardData] = useState({
-    brand: "visa",
-    number: "4485785674290087",
-    cvv: "123",
-    expirationMonth: "05",
-    expirationYear: "2029",
-    holderName: "Gorbadoc Oldbuck",
-    holderDocument: "94271564656",
-    reuse: false
-  });
-
   const [paymentToken, setPaymentToken] = useState("");
   const [cardMask, setCardMask] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCardData({ ...cardData, [name]: value });
-  };
+  const [cardData, setCardData] = useState({
+    brand: "visa",
+    number: "",
+    cvv: "",
+    expirationMonth: "",
+    expirationYear: "",
+    holderName: "",
+    holderDocument: "",
+    reuse: false
+  });
 
+  // Submeter para gerar token de pagamento
   const handleSubmit = async () => {
     setError("");
     setPaymentToken("");
@@ -49,6 +76,12 @@ function App() {
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCardData({ ...cardData, [name]: value });
+  };
+
+  // estilos
   const inputStyle: React.CSSProperties = {
     padding: "10px",
     borderRadius: "6px",
@@ -81,8 +114,52 @@ function App() {
     cursor: loading ? "not-allowed" : "pointer"
   };
 
+  const gerarCartao = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const formData = new FormData();
+      formData.append("acao", "gerar_cc");
+      formData.append("pontuacao", "N");
+      formData.append("bandeira", "visa"); // pode usar visa, mastercard, etc
+      formData.append("quantidade", "1");
+      formData.append("banco", "001");
+      formData.append("idade", "25");
+  
+      const response = await fetch("https://www.4devs.com.br/ferramentas_online.php", {
+        method: "POST",
+        body: formData
+      });
+  
+      const result = await response.json();
+      console.log(result);
+  
+      // Exemplo: preenchendo seus states com os dados recebidos
+      if (result && result[0]) {
+        const cartao = result[0];
+        setCardData({
+          brand: cartao.bandeira,
+          number: cartao.numero,
+          cvv: cartao.cvv,
+          expirationMonth: cartao.mes,
+          expirationYear: cartao.ano,
+          holderName: `${cartao.nome} ${cartao.sobrenome}`,
+          holderDocument: cartao.cpf,
+          reuse: false
+        });
+      }
+    } catch (err) {
+      setError("Falha ao gerar dados do cartão.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   return (
     <div style={containerStyle}>
+
       <h2 style={{ textAlign: "center" }}>Pagamento com Cartão</h2>
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         <input
@@ -108,6 +185,10 @@ function App() {
         <input type="text" name="expirationYear" value={cardData.expirationYear} onChange={handleInputChange} placeholder="Ano de expiração (YYYY)" style={inputStyle} />
         <input type="text" name="holderName" value={cardData.holderName} onChange={handleInputChange} placeholder="Nome do titular" style={inputStyle} />
         <input type="text" name="holderDocument" value={cardData.holderDocument} onChange={handleInputChange} placeholder="CPF do titular" style={inputStyle} />
+
+        <button onClick={gerarCartao} style={buttonStyle} disabled={loading}>
+          {loading ? "Gerando..." : "Gerar Dados Falsos"}
+        </button>
 
         <button onClick={handleSubmit} style={buttonStyle} disabled={loading}>
           {loading ? "Gerando..." : "Gerar Token de Pagamento"}

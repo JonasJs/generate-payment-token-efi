@@ -2,37 +2,6 @@ import { useState } from 'react'
 import './App.css'
 import EfiPay from "payment-token-efi";
 
-// Função para gerar dados de pessoa (nome e CPF)
-async function gerarPessoa() {
-  const response = await fetch('https://www.4devs.com.br/ferramentas_online.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({
-      acao: 'gerar_pessoa',
-      sexo: 'I',
-      pontuacao: 'N'
-    })
-  });
-  return await response.json();
-}
-
-// Função para gerar dados de cartão de crédito
-async function gerarCartaoCredito(bandeira = 'visa') {
-  const response = await fetch('https://www.4devs.com.br/ferramentas_online.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({
-      acao: 'gerar_cc',
-      bandeira: bandeira
-    })
-  });
-  return await response.json();
-}
-
 function App() {
   // STATES agrupados
   const [accountId, setAccountId] = useState("Identificador_de_conta_aqui");

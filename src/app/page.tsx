@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { CircleAlert, Copy, Check } from "lucide-react";
-import EfiPay from "payment-token-efi";
 import { generateValidCardNumber, generateValidCPF, generateHolderName, generateCVV, generateExpirationDate } from "@/lib/card.utils";
 
 export default function Home() {
@@ -43,16 +42,21 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const result: any = await EfiPay.CreditCard
+      const EfiPay = (await import("payment-token-efi")).default;
+      const result = await EfiPay.CreditCard
         .setAccount(accountId)
         .setEnvironment(environment)
         .setCreditCardData(cardData)
-        .getPaymentToken();
+        .getPaymentToken() as { payment_token?: string; card_mask?: string };
 
       setPaymentToken(result?.payment_token || "");
       setCardMask(result?.card_mask || "");
-    } catch (error: any) {
-      setError(error?.error_description || "Erro desconhecido.");
+    } catch (error: unknown) {
+      if (error && typeof error === "object" && "error_description" in error) {
+        setError((error as { error_description: string }).error_description);
+      } else {
+        setError("Erro desconhecido.");
+      }
     } finally {
       setLoading(false);
     }
@@ -94,7 +98,7 @@ export default function Home() {
         holderDocument: holderDocument,
         reuse: false
       });
-    } catch (err) {
+    } catch{
       setError("Falha ao gerar dados do cartão.");
     } finally {
       setLoading(false);

@@ -1,6 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gerador de Token de Pagamento EFI
 
-## Getting Started
+*Leia em outros idiomas: [English](README.en.md) · [Español](README.es.md)*
+
+Uma aplicação Next.js que fornece uma interface amigável para gerar tokens de pagamento para o sistema de pagamento Efí. Esta ferramenta é particularmente útil para desenvolvedores que precisam testar e integrar com as soluções de pagamento da Efí.
+
+## Funcionalidades
+
+- 🔐 Geração de tokens de pagamento para transações com cartão de crédito
+- 🎭 Suporte para ambientes Sandbox e Produção
+- 🎲 Gerador de dados de cartão de teste
+- 📋 Funcionalidade de cópia fácil para a área de transferência
+- 💳 Validação de cartão de crédito
+- 🔄 Feedback em tempo real
+- 🎨 Interface moderna e responsiva construída com Tailwind CSS
+
+## Como Começar
+
+### Pré-requisitos
+
+- Node.js 18.0 ou superior
+- npm, yarn ou pnpm
+
+### Instalação
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/yourusername/generate-payment-token-efi.git
+```
 
 First, run the development server:
 

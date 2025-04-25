@@ -1,28 +1,47 @@
-# Generate Payment Token EFI
+# Gerador de Token de Pagamento EFI
 
-*Read this in other languages: [Português](README.md) · [Español](README.es.md)*
+*Leia em outros idiomas: [English](README.en.md) · [Español](README.es.md)*
 
-A Next.js application that provides a user-friendly interface to generate payment tokens for the Efí payment system. This tool is particularly useful for developers who need to test and integrate with Efí's payment solutions.
+Este projeto permite a criptografia dos dados do cartão de crédito diretamente no navegador do cliente para gerar o payment_token da Efí. Esta ferramenta facilita o processo de integração e testes, permitindo gerar tokens de pagamento de forma segura e identificar a bandeira do cartão.
 
-## Features
+## Sobre o Projeto
 
-- 🔐 Generate payment tokens for credit card transactions
-- 🎭 Support for both Sandbox and Production environments
-- 🎲 Test card data generator
-- 📋 Easy copy-to-clipboard functionality
-- 💳 Credit card validation
-- 🔄 Real-time feedback
-- 🎨 Modern and responsive UI built with Tailwind CSS
+Esta aplicação foi desenvolvida para auxiliar desenvolvedores e integradores da Efí a testar a geração de tokens de pagamento. Ela utiliza a biblioteca oficial `payment-token-efi` para criptografar os dados do cartão diretamente no navegador, garantindo a segurança das informações sensíveis do cartão.
 
-## Getting Started
+## Funcionalidades
 
-### Prerequisites
+- 🔐 Geração de tokens de pagamento para transações com cartão de crédito
+- 🎭 Suporte para ambientes Sandbox e Produção
+- 🎲 Gerador de dados de cartão de teste
+- 📋 Funcionalidade de cópia fácil para a área de transferência
+- 💳 Validação de cartão de crédito
+- 🔄 Feedback em tempo real
+- 🎨 Interface moderna e responsiva construída com Tailwind CSS
 
-- Node.js 18.0 or higher
-- npm, yarn, or pnpm
+## Como Começar
 
-### Installation
+### Pré-requisitos
 
-1. Clone the repository:
+- Node.js 18.0 ou superior
+- npm, yarn ou pnpm
+
+### Instalação
+
+1. Clone o repositório:
 ```bash
 git clone https://github.com/yourusername/generate-payment-token-efi.git
+```
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
